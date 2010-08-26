@@ -15,7 +15,8 @@ int
   w=480,h=360, // tamaño inicialde la ventana
   xini,yini,xfin,yfin, // puntos extremos
   pdef=0, // cantidad de puntos definidos (0, 1 o 2)
-  modo=1; // metodo (1:Bres 2:DDa 3:Circ)
+  modo=1, // metodo (1:Bres 2:DDa 3:Circ)
+  xglob = 0, yglob = 0;
 
 float // luces y colores en float
   fondo[]={0.85f,0.9f,0.95f,1.f},
@@ -324,6 +325,41 @@ void Motion_cb(int x, int y){ // drag
   Display_cb();
 }
 
+int distancia(int x, int y, int p){
+  if (p==1){
+	return (fabs(x - xini) + fabs(y - yini));
+  }
+  else{
+    return (fabs(x - xfin) + fabs(y - yfin));
+  }
+}
+
+bool tolerancia(int x, int y){
+  int d1 = distancia(x,y,1);
+  int d2 = distancia(x,y,2);
+  return (d1 <= d2)? true : false;
+}
+
+void Motion_pt(int x, int y){
+	y = h - y;
+	edit_ini = tolerancia(x, y);
+
+	int p = xglob - x;
+	int z = yglob - y;
+	
+    if (edit_ini){
+	  xini += - p;
+	  yini += - z;
+	}
+	else{
+	  xfin += - p;
+	  yfin += - z;
+	}
+	xglob += - p;
+	yglob += - z;
+	Display_cb();
+}
+
 // Clicks del mouse
 void Mouse_cb(int button, int state, int x, int y){
   y=h-y; // el 0 esta ariba
@@ -338,6 +374,7 @@ void Mouse_cb(int button, int state, int x, int y){
         Display_cb();
         glutMotionFunc(Motion_cb); // callback para los drags
         edit_ini=true;
+	cout << "punto 1" << endl;
         return;
       }
       else if (pdef==1){ // pone el segundo punto
@@ -348,7 +385,12 @@ void Mouse_cb(int button, int state, int x, int y){
         edit_ini=false;
         return;
       }
-      else return;
+      else {
+        xglob = x;
+	yglob = y;
+	glutMotionFunc(Motion_pt);
+        return;
+      }
     } // down
     else if (state==GLUT_UP) glutMotionFunc(0); // anula el callback para los drags
   } // left
