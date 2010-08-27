@@ -142,11 +142,8 @@ void circulo_Bresenham(int xc, int yc, int r) {
   }
 
   int x=0, y=r, h=1-r;
-  int e = 0;
-  int se = 0;
-  bool este = true;
-  if (h>=0) este = false;
-
+  int e = 3;
+  int se = 5 - (r<<1);
   while (y>x){
     glVertex2i( x+xc, y+yc);
     glVertex2i( x+xc,-y+yc);
@@ -159,21 +156,15 @@ void circulo_Bresenham(int xc, int yc, int r) {
     glVertex2i(-y+xc,-x+yc);
 //cout << x << "," << y << "\n";
     if (h>=0){ // SE
-      se = ((x-y)<<1)+5;
-      if (este){
-        h += se + 2;
-      }
-      else {
-        h += se + 4;
-      }
+        h += se;
+	se += 4;
       y--; 
-      este = false;
     }
     else { // E
-      e = (x<<1)+3; 
-      h+= e + 2;
-      este = true;
+      h += e;
+      se += 2;
     }
+    e += 2;
     x++;
   }
   // x==y => no hace falta intercambiar
