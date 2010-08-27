@@ -25,7 +25,8 @@ float // luces y colores en float
 
 bool
   edit_ini=true, // edita el punto inicial (false=el final)
-  cl_info=true; // informa por la linea de comandos
+  cl_info=true, // informa por la linea de comandos
+  tol = false; // tolerancia
 
 
 //------------------------------------------------------------
@@ -325,30 +326,38 @@ int distancia(int x, int y, int p){
   }
 }
 
-bool tolerancia(int x, int y){
+void tolerancia(int x, int y){
   int d1 = distancia(x,y,1);
   int d2 = distancia(x,y,2);
-  return (d1 <= d2)? true : false;
+  if (d1 <= 10){
+    tol = true;
+    edit_ini = true;
+    }
+  else if( d2 <= 10)
+    {
+    tol =  true;
+    edit_ini = false;
+    }
+  else {tol = false;}
 }
 
 void Motion_pt(int x, int y){
-	y = h - y;
-	edit_ini = tolerancia(x, y);
+  y = h - y;
 
-	int p = xglob - x;
-	int z = yglob - y;
+  int p = xglob - x;
+  int z = yglob - y;
 	
-    if (edit_ini){
-	  xini += - p;
-	  yini += - z;
-	}
-	else{
-	  xfin += - p;
-	  yfin += - z;
-	}
-	xglob += - p;
-	yglob += - z;
-	Display_cb();
+  if (edit_ini){
+    xini += - p;
+    yini += - z;
+  }
+  else{
+    xfin += - p;
+    yfin += - z;
+  }
+  xglob += - p;
+  yglob += - z;
+  Display_cb();
 }
 
 // Clicks del mouse
@@ -379,6 +388,8 @@ void Mouse_cb(int button, int state, int x, int y){
       else {
         xglob = x;
 	yglob = y;
+	tolerancia(x, y);
+	if (!tol) {return;}
 	glutMotionFunc(Motion_pt);
         return;
       }
