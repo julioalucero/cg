@@ -80,10 +80,16 @@ void drawObjects(){
   }
   if (wire) {
     if (!color) glDisable(GL_LIGHTING); // lineas sin material (siempre en color)
-    glLineWidth(1); // espesor de lineas
+    glLineWidth(3); // espesor de lineas
     glColor4fv(line_color); // color de lineas
     glutWireIcosahedron();
     if (!color) glEnable(GL_LIGHTING); // vuelve a habilitar material
+
+    glDepthFunc(GL_GREATER);
+    glLineWidth(1);
+    glutWireIcosahedron();
+
+    glDepthFunc(GL_LEQUAL);
   }
 }
 ////////////////////////////////////////////////////////////////////////////////////////
