@@ -78,6 +78,11 @@ void drawObjects(){
     glColor4fv(face_color);
     glutSolidIcosahedron();
   }
+  else{
+    glColor4fv(fondo);
+    glutSolidIcosahedron();
+  }
+
   if (wire) {
     if (!color) glDisable(GL_LIGHTING); // lineas sin material (siempre en color)
     glLineWidth(3); // espesor de lineas
