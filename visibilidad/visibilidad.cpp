@@ -92,9 +92,16 @@ void drawObjects(){
 
     glDepthFunc(GL_GREATER);
     glLineWidth(1);
+
+    glEnable(GL_LINE_STIPPLE);
+    GLint factor = 2;
+    GLushort patron = 0x0C0F;
+    glLineStipple(factor,patron);
+
     glutWireIcosahedron();
 
     glDepthFunc(GL_LEQUAL);
+    glDisable(GL_LINE_STIPPLE);
   }
 }
 ////////////////////////////////////////////////////////////////////////////////////////
