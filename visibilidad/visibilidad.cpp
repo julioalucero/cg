@@ -79,8 +79,9 @@ void drawObjects(){
     glutSolidIcosahedron();
   }
   else{
-    glColor4fv(fondo);
+    glColorMask(false,false,false,false);
     glutSolidIcosahedron();
+    glColorMask(true,true,true,true);
   }
 
   if (wire) {
